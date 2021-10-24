@@ -1,2 +1,2 @@
-# statdept
- R package "statdept"
+# deptstat
+ R package "deptstat"
