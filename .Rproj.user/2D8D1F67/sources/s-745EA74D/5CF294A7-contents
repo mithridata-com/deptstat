@@ -57,6 +57,8 @@ plot(mtcars_with_outliers[["mpg"]], main = "Marked outliers",
      col = factor(mtcars_with_outliers$mpg.is_outlier), pch = 19)
 legend("bottomright", legend = c("Normal data","Outlier"), col = 1:2, pch = 19, bty = "n")
 
+plot_crayons()
+
 }
 \author{
 Dmitrii Diachkov (2021)
