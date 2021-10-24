@@ -14,7 +14,7 @@ read_and_bind_xlsx(path, filename_pattern = "", return_filenames = F)
 \item{return_filenames}{A parameter, that can be set to TRUE if the output must contain source filenames. Default: FALSE}
 }
 \value{
-A vector or data frame with outliers marked as 1 and normal observations marked as 0
+A data frame of all XLSX files, with a given substring in each filename, joined
 }
 \description{
 This function is created to bind similar files into one data frame.
@@ -23,6 +23,7 @@ This function is created to bind similar files into one data frame.
 # This will return a dataframe, based on binded XLSX files, which name contained 'data' as a substring
 read_and_bind_xlsx(getwd(), "data")
 
-#'  @author Dmitrii Diachkov (2021)
-
+}
+\author{
+Dmitrii Diachkov (2021)
 }

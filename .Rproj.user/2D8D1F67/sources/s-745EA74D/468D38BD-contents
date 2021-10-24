@@ -6,13 +6,13 @@
 #' @param filename_pattern A substring for subsetting files (part of file name)
 #' @param return_filenames A parameter, that can be set to TRUE if the output must contain source filenames. Default: FALSE
 #'
-#' @return A vector or data frame with outliers marked as 1 and normal observations marked as 0
+#' @return A data frame of all XLSX files, with a given substring in each filename, joined
 #'
 #' @examples
 #' # This will return a dataframe, based on binded XLSX files, which name contained 'data' as a substring
 #' read_and_bind_xlsx(getwd(), "data")
 #'
-#' #'  @author Dmitrii Diachkov (2021)
+#' @author Dmitrii Diachkov (2021)
 #'
 
 #' @export
