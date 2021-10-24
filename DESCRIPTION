@@ -1,0 +1,10 @@
+Package: deptstat
+Type: Package
+Title: Data processing and filtering
+Version: 0.1.0
+Author: Dmitrii Diachkov
+Maintainer: The package maintainer <d.djachkov@gmail.com>
+Description: A set of tools for data processing that are used in the CBR Statistics Department
+License: Free
+Encoding: UTF-8
+LazyData: true

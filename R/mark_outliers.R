@@ -1,0 +1,86 @@
+#' @export
+mark_outliers <- function(data, var = "", tukey.coef = 1.5,
+                          trim.type = "two-sided",
+                          quantiles = c(0.25, 0.75),
+                          verbose = FALSE, return_df = FALSE)
+{
+  # CHECK IF VARS ARE TYPED IN
+  if(nchar(var)==0)
+  {stop(paste0("Variable for processing is not specified"))}
+
+  # CHECK IF VARS ARE TYPED IN
+  if(length(var)>1)
+  {stop(paste0("Multi-dimensional outlier validation is not supported in mark_outliers. Try mark_outliers_2d"))}
+
+  # CHECK IF VARS ARE TYPED IN
+  if(!is.data.frame(data))
+  {stop(paste0("Data must be a dataframe"))}
+
+  # CHECK IF VARS ARE TYPED IN
+  if(!(var %in% colnames(data)))
+  {stop(paste0("Variable ",var," doesn't exist in dataframe"))}
+
+  # CHECK IF trim.type is specified correctly, according to logic
+  if(!(length(quantiles) %in% c(1,2)))
+  {stop(paste0("Quantlies vector must be of size 1 or 2 (not ",length(quantiles),")"))}
+
+  # CHECK IF trim.type is specified correctly, according to logic
+  if(sum(is.na(data[[var]]))>0)
+  {stop(paste0("column ",var," has missing values. Handle NA"))}
+
+  # CHECK IF trim.type is specified correctly, according to logic
+  if(!trim.type %in% c("two-sided","right","left"))
+  {stop("trim.type not supported (must be \"two-sided\",\"right\" or \"left\")")}
+
+  # Ordering quantiles to unpack them to border Q1 and Q3
+  quantiles <- quantiles[order(quantiles)]
+  Q1 <- quantiles[1]
+  Q3 <- quantiles[2]
+
+  X <- data[[var]]
+  X.left_boundary <- quantile(X, Q1)
+  X.right_boundary <- quantile(X, Q3)
+  X.IQR <- X.right_boundary - X.left_boundary
+  X.right_outliers <- X > X.right_boundary + tukey.coef * X.IQR
+  X.left_outliers <- X < X.left_boundary - tukey.coef * X.IQR
+
+  if(trim.type == "two-sided"){X.is_outlier <- X.right_outliers+X.left_outliers}
+  if(trim.type == "right"){X.is_outlier <- X.right_outliers+0}
+  if(trim.type == "left"){X.is_outlier <- X.left_outliers+0}
+
+  if(verbose == T)
+  {
+    print("-- Summary")
+    print(paste0("--- Var: ",var))
+    print(paste0("--- Tukey.coefficent: ",tukey.coef))
+    print(paste0("--- Trim type: ",trim.type))
+    print(paste0("---- Lower boundary: ",X.left_boundary))
+    print(paste0("---- Upper boundary: ",X.right_boundary))
+    print(paste0("---- IQR (or range): ",X.IQR))
+    print(paste0("---- Total number of outliers:", sum(X.is_outlier)))
+    print("")
+  }
+
+  if(return_df == T)
+  {
+    return_df_cols <- suppressWarnings(data.frame(X, tukey.coef, X.right_boundary, X.left_boundary,
+                                                  X.IQR, X.is_outlier))
+
+    colnames(return_df_cols) <- c(paste0(var,".original_data"),
+                                  paste0(var,".tukey_coef"),
+                                  paste0(var,".right_boundary"),
+                                  paste0(var,".left_boundary"),
+                                  paste0(var,".range"),
+                                  paste0(var,".is_outlier"))
+    return_df_cols <- cbind(data, return_df_cols)
+    return(return_df_cols)
+  }
+  else
+  {
+    return_only_outliers <- suppressWarnings(as.vector(X.is_outlier))
+
+    names(return_only_outliers) <- c(paste0(var,".is_outlier"))
+    return(return_only_outliers)
+  }
+
+}
