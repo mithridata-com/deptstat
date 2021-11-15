@@ -1,7 +1,0 @@
-library(deptstat)
-read_and_bind_xlsx("C:\\Users\\dimet\\Desktop\\test")
-
-
-devtools::document()
-
-getwd()
